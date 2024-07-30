@@ -19,6 +19,7 @@ import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
 import Loading from "../loading"
+import CategoryForm from "./dialogs/category-form"
 
 export const columns: ColumnDef<Category>[] = [
   {
@@ -76,28 +77,31 @@ export const columns: ColumnDef<Category>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const actions = row.original
+      const [openEdit, setOpenEdit] = useState<boolean>(false)
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <CategoryForm
+            id={actions.id}
+            dialogOpen={openEdit}
+            dialogClose={() => setOpenEdit(false)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
       )
     },
   },
@@ -118,7 +122,7 @@ const Categories = () => {
               snapshot.docs.map((doc: any) => ({
                 id: doc.id,
                 ...doc.data(),
-                actions: { id: doc.id, name: doc.data().court_name },
+                actions: { id: doc.id },
               }))
             )
           },
@@ -130,14 +134,10 @@ const Categories = () => {
       }
     }
 
-    return () => {
-      fetchCategories()
-    }
+    fetchCategories()
   }, [])
 
-  if (!data.length) return <Loading />
-
-  return <DataTable data={data} columns={columns} />
+  return <DataTable data={data} columns={columns} add={<CategoryForm />} />
 }
 
 export default Categories

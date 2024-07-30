@@ -26,11 +26,11 @@ import { Card } from "@/components/ui/card"
 // Assets
 import Image from "next/image"
 import logo from "@/assets/images/logo.png"
-import { Loader } from "lucide-react"
+import { Loader2 } from "lucide-react"
 // Stores and Options
 import { COURTS } from "@/store/options"
 import { useAuthStore } from "@/store/auth"
-import { LOGIN_FORM_SCHEMA } from "@/schema/auth"
+import { LOGIN_FORM_SCHEMA } from "@/schema"
 import { Option } from "@/types"
 // Navigation
 import { usePathname, useRouter } from "next/navigation"
@@ -163,7 +163,7 @@ const Page = () => {
             )}
             <Button type="submit" className="w-full mt-6" disabled={loading}>
               {loading ? (
-                <Loader className="animate-spin mr-2 h-4 w-4" />
+                <Loader2 className="animate-spin mr-2 h-4 w-4" />
               ) : (
                 "Login"
               )}

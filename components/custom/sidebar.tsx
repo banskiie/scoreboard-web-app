@@ -33,11 +33,12 @@ const SidebarItem = ({ icon, label }: SidebarItemProps) => {
 
 const Sidebar = () => {
   return (
-    <div className="h-full w-full p-4 flex flex-col items-center">
+    <div className="h-full w-full p-4 flex flex-col items-center border">
       <Image
         src={logo}
         alt="test"
         className="h-32 object-contain filter drop-shadow-lg pb-3 px-2"
+        priority
       />
       <div className="w-full flex flex-col gap-2">
         <SidebarItem icon={<Medal {...sidebarProps} />} label="games" />

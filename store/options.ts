@@ -50,3 +50,34 @@ export const COURTS: Option[] = [
     value: "court12@cone.ph",
   },
 ]
+
+export const CATEGORY_GENDERS: Option[] = [
+  {
+    label: "mixed",
+    value: "mixed",
+  },
+  {
+    label: "men",
+    value: "men",
+  },
+  {
+    label: "women",
+    value: "women",
+  },
+]
+
+export const CATEGORY_TYPES: Option[] = [
+  {
+    label: "singles",
+    value: "singles",
+  },
+  {
+    label: "doubles",
+    value: "doubles",
+  },
+]
+
+export const OFFICIAL_TYPE: Option[] = [
+  { label: "Service Judge", value: "service judge" },
+  { label: "Umpire", value: "umpire" },
+]

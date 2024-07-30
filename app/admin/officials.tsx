@@ -9,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import DataTable from "@/components/custom/data-table"
@@ -18,6 +17,7 @@ import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
 import Loading from "../loading"
+import OfficialForm from "./dialogs/official-form"
 
 export const columns: ColumnDef<Official>[] = [
   {
@@ -65,28 +65,31 @@ export const columns: ColumnDef<Official>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const actions = row.original
+      const [openEdit, setOpenEdit] = useState<boolean>(false)
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <OfficialForm
+            id={actions.id}
+            dialogOpen={openEdit}
+            dialogClose={() => setOpenEdit(false)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
       )
     },
   },
@@ -94,11 +97,9 @@ export const columns: ColumnDef<Official>[] = [
 
 const Officials = () => {
   const [data, setData] = useState<Official[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchOfficials = async () => {
-      setLoading(true)
       try {
         const ref = collection(FIRESTORE_DB, "officials")
         onSnapshot(query(ref, orderBy("created_date", "asc")), {
@@ -107,15 +108,13 @@ const Officials = () => {
               snapshot.docs.map((doc: any) => ({
                 id: doc.id,
                 ...doc.data(),
-                actions: { id: doc.id, name: doc.data().court_name },
+                actions: { id: doc.id },
               }))
             )
           },
         })
       } catch (error: any) {
         console.error(error)
-      } finally {
-        setLoading(false)
       }
     }
 
@@ -124,9 +123,7 @@ const Officials = () => {
     }
   }, [])
 
-  if (!data.length) return <Loading />
-
-  return <DataTable data={data} columns={columns} />
+  return <DataTable data={data} columns={columns} add={<OfficialForm />} />
 }
 
 export default Officials

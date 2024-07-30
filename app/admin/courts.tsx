@@ -9,7 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
@@ -18,7 +17,7 @@ import { Court } from "@/types"
 import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
-import Loading from "../loading"
+import CourtForm from "./dialogs/court-form"
 
 export const columns: ColumnDef<Court>[] = [
   {
@@ -36,6 +35,23 @@ export const columns: ColumnDef<Court>[] = [
     },
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("court_name")}</div>
+    ),
+  },
+  {
+    accessorKey: "court_email",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => (
+      <div className="lowercase">{row.getValue("court_email")}</div>
     ),
   },
   {
@@ -69,28 +85,31 @@ export const columns: ColumnDef<Court>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const actions = row.original
+      const [openEdit, setOpenEdit] = useState<boolean>(false)
 
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <CourtForm
+            id={actions.id}
+            dialogOpen={openEdit}
+            dialogClose={() => setOpenEdit(false)}
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                Edit
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </>
       )
     },
   },
@@ -98,11 +117,9 @@ export const columns: ColumnDef<Court>[] = [
 
 const Courts = () => {
   const [data, setData] = useState<Court[]>([])
-  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     const fetchCourts = async () => {
-      setLoading(true)
       try {
         const ref = collection(FIRESTORE_DB, "courts")
         onSnapshot(query(ref, orderBy("created_date", "asc")), {
@@ -118,19 +135,13 @@ const Courts = () => {
         })
       } catch (error: any) {
         console.error(error)
-      } finally {
-        setLoading(false)
       }
     }
 
-    return () => {
-      fetchCourts()
-    }
+    fetchCourts()
   }, [])
 
-  if (!data.length) return <Loading />
-
-  return <DataTable data={data} columns={columns} />
+  return <DataTable data={data} columns={columns} add={<CourtForm />} />
 }
 
 export default Courts

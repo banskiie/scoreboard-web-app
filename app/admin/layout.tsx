@@ -2,10 +2,10 @@ import Sidebar from "@/components/custom/sidebar"
 import Header from "@/components/custom/admin-header"
 import { ReactNode } from "react"
 import type { Metadata } from "next/types"
-import { Roboto_Condensed } from "next/font/google"
+import { Inter } from "next/font/google"
 import { cn } from "@/lib/utils"
 
-const roboto = Roboto_Condensed({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "Administrator",
@@ -20,7 +20,7 @@ const AdminLayout = ({
     <div
       className={cn(
         "h-screen w-full font-sans antialiased flex flex-row",
-        roboto.className
+        inter.className
       )}
     >
       <div className="w-72">
