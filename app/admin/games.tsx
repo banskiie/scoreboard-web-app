@@ -16,7 +16,7 @@ import { Game, Set } from "@/types"
 import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
-import CourtForm from "./dialogs/court-form"
+import GameForm from "./dialogs/game-form"
 import { Badge } from "@/components/ui/badge"
 
 export const columns: ColumnDef<Game>[] = [
@@ -47,7 +47,7 @@ export const columns: ColumnDef<Game>[] = [
       const category_type = row.original.details.category.split(".")[1]
 
       return (
-        <div className="capitalize w-40">
+        <div className="capitalize w-52">
           {category_name} ({category_type})
         </div>
       )
@@ -71,7 +71,7 @@ export const columns: ColumnDef<Game>[] = [
     },
     header: "Matchup",
     cell: ({ row }) => {
-      const { players, details, sets } = row.original as any
+      const { players, details } = row.original as any
 
       const fetchPlayerName = (player: string): string =>
         players[`team_${player[0]}`][`player_${player[1]}`].use_nickname
@@ -81,18 +81,42 @@ export const columns: ColumnDef<Game>[] = [
             } ${players[`team_${player[0]}`][`player_${player[1]}`].last_name}`
 
       return (
-        <div className="w-[280px] flex flex-col items-center">
+        <div className="w-[24rem] flex flex-col items-center">
           <div className="capitalize flex flex-row items-center justify-between w-full">
             <div className="flex flex-col w-1/3">
-              <span>{fetchPlayerName("a1")}</span>
-              <span>{fetchPlayerName("a2")}</span>
+              <span
+                className={
+                  details.game_winner === "a" ? "font-bold" : undefined
+                }
+              >
+                {fetchPlayerName("a1")}
+              </span>
+              <span
+                className={
+                  details.game_winner === "a" ? "font-bold" : undefined
+                }
+              >
+                {fetchPlayerName("a2")}
+              </span>
             </div>
             <div className="flex flex-col w-1/3">
               <span className="text-center lowercase font-bold">vs.</span>
             </div>
             <div className="flex flex-col w-1/3 items-end">
-              <span className="text-end">{fetchPlayerName("b1")}</span>
-              <span className="text-end">{fetchPlayerName("b2")}</span>
+              <span
+                className={`text-end ${
+                  details.game_winner === "b" ? "font-bold" : undefined
+                }`}
+              >
+                {fetchPlayerName("b1")}
+              </span>
+              <span
+                className={`text-end ${
+                  details.game_winner === "b" ? "font-bold" : undefined
+                }`}
+              >
+                {fetchPlayerName("b2")}
+              </span>
             </div>
           </div>
           <div
@@ -104,7 +128,7 @@ export const columns: ColumnDef<Game>[] = [
                 : "hidden"
             }`}
           >
-            <Badge className="w-10 p-0 flex items-center justify-center bg-green-800">
+            <Badge className="w-12 p-0 flex items-center justify-center bg-green-800">
               <span className="text-[0.65rem] text-center">Winner</span>
             </Badge>
           </div>
@@ -179,7 +203,7 @@ export const columns: ColumnDef<Game>[] = [
     },
     cell: ({ row }) => {
       const { no_of_sets } = row.original.details
-      return <div className="w-14">Best of {no_of_sets}</div>
+      return <div className="w-16">Best of {no_of_sets}</div>
     },
   },
   {
@@ -254,8 +278,8 @@ export const columns: ColumnDef<Game>[] = [
       const [openEdit, setOpenEdit] = useState<boolean>(false)
 
       return (
-        <div className="w-4">
-          <CourtForm
+        <div className="w-10">
+          <GameForm
             id={actions.id}
             dialogOpen={openEdit}
             dialogClose={() => setOpenEdit(false)}
@@ -306,7 +330,7 @@ const Courts = () => {
     fetchCourts()
   }, [])
 
-  return <DataTable data={data} columns={columns} add={<p>Test</p>} />
+  return <DataTable data={data} columns={columns} add={<GameForm />} />
 }
 
 export default Courts
