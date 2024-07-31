@@ -5,7 +5,7 @@ type Props = {}
 
 const loading = (props: Props) => {
   return (
-    <div className="grid h-full w-full place-items-center">
+    <div className="grid h-screen w-full place-items-center">
       <Loader2 className="animate-spin h-52 w-52" />
     </div>
   )

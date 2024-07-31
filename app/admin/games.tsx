@@ -18,15 +18,49 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
 import GameForm from "./dialogs/game-form"
 import { Badge } from "@/components/ui/badge"
+import moment from "moment"
 
 export const columns: ColumnDef<Game>[] = [
   {
     accessorKey: "time.slot",
-    header: "Time Slot",
+    accessorFn: (data: Game) => {
+      const { time } = data as any
+      const { slot } = time
+      console.log(slot)
+      return !!slot
+        ? (moment.unix(slot).format("MMMM D h:mm A") as string)
+        : "TBA"
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Slot
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
     cell: ({ row }) => {
       const { slot } = row.original.time
 
-      return <span className="capitalize px-1">{!!slot ? slot : "TBA"}</span>
+      return (
+        <div className="h-16 flex items-center w-full">
+          {!!slot ? (
+            <div className="w-full flex flex-col">
+              <span className="capitalize font-bold">
+                {moment.unix(slot).format("h:mm A")}
+              </span>
+              <span className="capitalize text-slate-500 text-[0.65rem]">
+                {moment.unix(slot).format("MMMM D")}
+              </span>
+            </div>
+          ) : (
+            <p>TBA</p>
+          )}
+        </div>
+      )
     },
   },
   {
@@ -167,15 +201,15 @@ export const columns: ColumnDef<Game>[] = [
                   key={index}
                 >
                   <span
-                    className={`w-1/3 ${
+                    className={`w-1/3 text-center ${
                       set.winner === "a" ? "font-black" : undefined
                     }`}
                   >
                     {set.a_score}
                   </span>
-                  <span className={`w-1/3`}>-</span>
+                  <span className={`w-1/3 text-center `}>-</span>
                   <span
-                    className={`w-1/3 ${
+                    className={`w-1/3 text-center  ${
                       set.winner === "b" ? "font-black" : undefined
                     }`}
                   >
@@ -293,6 +327,9 @@ export const columns: ColumnDef<Game>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+                View
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenEdit(true)}>
                 Edit
               </DropdownMenuItem>

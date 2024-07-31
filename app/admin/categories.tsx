@@ -12,13 +12,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
 import DataTable from "@/components/custom/data-table"
 import { Category } from "@/types"
 import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
-import Loading from "../loading"
 import CategoryForm from "./dialogs/category-form"
 
 export const columns: ColumnDef<Category>[] = [

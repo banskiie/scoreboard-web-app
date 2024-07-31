@@ -52,7 +52,7 @@ const SET_SCHEMA = z.object({
   current_round: z.number(),
   last_team_scored: z.string(),
   winner: z.string(),
-  scoresheet: z.array(ROUND_SCHEMA),
+  scoresheet: z.any(),
   switch: z.boolean(),
 })
 
@@ -64,12 +64,12 @@ const SETS_SCHEMA = z.object({
 
 const DETAILS_SCHEMA = z.object({
   created_date: z.any(),
-  game_no: z.string(),
-  court: z.string(),
+  game_no: z.string().optional(),
+  court: z.string().min(1, DEFAULT_REQUIRED_MESSAGE),
   category: z.any(),
   group_no: z.string(),
   no_of_sets: z.union([z.literal(1), z.literal(3)]),
-  max_score: z.number(),
+  max_score: z.number().min(1),
   game_winner: z.string(),
   shuttles_used: z.number(),
   playing_set: z.union([z.literal(1), z.literal(2), z.literal(3)]),
@@ -113,7 +113,7 @@ const STATUSES_SCHEMA = z.object({
   focus: z.any().optional(),
 })
 
-export const GAME_SCHEMA = z.object({
+export const GAME_FORM_SCHEMA = z.object({
   details: DETAILS_SCHEMA,
   sets: SETS_SCHEMA,
   time: TIME_SCHEMA,
@@ -122,7 +122,7 @@ export const GAME_SCHEMA = z.object({
   statuses: STATUSES_SCHEMA,
 })
 
-export const InitialGameState = GAME_SCHEMA.parse({
+export const InitialGameState = {
   details: {
     created_date: Date.now(),
     game_no: "",
@@ -130,12 +130,12 @@ export const InitialGameState = GAME_SCHEMA.parse({
     category: "",
     group_no: "",
     no_of_sets: 1,
-    max_score: 21,
+    max_score: 31,
     game_winner: "",
     shuttles_used: 0,
     playing_set: 1,
     plus_two_rule: false,
-    plus_two_score: 30,
+    plus_two_score: 40,
   },
   sets: {
     set_1: {
@@ -207,4 +207,4 @@ export const InitialGameState = GAME_SCHEMA.parse({
     active: false,
     focus: Date.now(),
   },
-})
+}
