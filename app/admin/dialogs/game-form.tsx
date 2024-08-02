@@ -463,7 +463,7 @@ const GameForm = ({ id, dialogOpen, dialogClose }: any) => {
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="Court Name"
+                          placeholder="e.g. R16"
                           {...field}
                         />
                       </FormControl>
@@ -480,7 +480,7 @@ const GameForm = ({ id, dialogOpen, dialogClose }: any) => {
                       <FormControl>
                         <Input
                           disabled={loading}
-                          placeholder="Group No."
+                          placeholder="e.g. 6"
                           {...field}
                         />
                       </FormControl>

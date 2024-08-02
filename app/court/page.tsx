@@ -161,7 +161,7 @@ const Page = () => {
     return () => unsubscribe()
   }, [user, setData])
 
-  if (data.details.game_winner || !data?.statuses.active) {
+  if (data?.details.game_winner || !data?.statuses.active) {
     return <Ads />
   }
 

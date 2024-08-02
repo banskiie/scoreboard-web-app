@@ -19,6 +19,7 @@ import { useState, useEffect } from "react"
 import GameForm from "./dialogs/game-form"
 import { Badge } from "@/components/ui/badge"
 import moment from "moment"
+import Scoresheet from "./dialogs/scoresheet"
 
 export const columns: ColumnDef<Game>[] = [
   {
@@ -310,6 +311,7 @@ export const columns: ColumnDef<Game>[] = [
     cell: ({ row }) => {
       const actions = row.original
       const [openEdit, setOpenEdit] = useState<boolean>(false)
+      const [openView, setOpenView] = useState<boolean>(false)
 
       return (
         <div className="w-10">
@@ -317,6 +319,11 @@ export const columns: ColumnDef<Game>[] = [
             id={actions.id}
             dialogOpen={openEdit}
             dialogClose={() => setOpenEdit(false)}
+          />
+          <Scoresheet
+            id={actions.id}
+            dialogOpen={openView}
+            dialogClose={() => setOpenView(false)}
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -327,7 +334,7 @@ export const columns: ColumnDef<Game>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+              <DropdownMenuItem onClick={() => setOpenView(true)}>
                 View
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setOpenEdit(true)}>

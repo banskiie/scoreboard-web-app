@@ -76,13 +76,13 @@ const Header = () => {
       <HeaderSlice position="start">
         <span className="text-4xl font-bold uppercase">
           {user?.displayName}
-          {!!(!data.details.game_winner && data) &&
+          {!!(!data?.details.game_winner && data) &&
             `  (Set ${data?.details.playing_set} of
             ${data?.details.no_of_sets})`}
         </span>
       </HeaderSlice>
       <HeaderSlice position="center">
-        {!!(!data.details.game_winner && data) && (
+        {!!(!data?.details.game_winner && data) && (
           <span className="text-4xl text-center font-bold uppercase">
             {`${data?.details.category.split(".")[0]} - ${
               data?.details.category.split(".")[1]
