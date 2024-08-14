@@ -20,6 +20,7 @@ import GameForm from "./dialogs/game-form"
 import { Badge } from "@/components/ui/badge"
 import moment from "moment"
 import Scoresheet from "./dialogs/scoresheet"
+import UploadSchedule from "./dialogs/upload"
 
 export const columns: ColumnDef<Game>[] = [
   {
@@ -355,7 +356,7 @@ const Courts = () => {
     const fetchCourts = async () => {
       try {
         const ref = collection(FIRESTORE_DB, "games")
-        onSnapshot(query(ref, orderBy("details.created_date", "asc")), {
+        onSnapshot(query(ref, orderBy("statuses.current", "desc")), {
           next: (snapshot) => {
             setData(
               snapshot.docs.map((doc: any) => ({
@@ -374,7 +375,18 @@ const Courts = () => {
     fetchCourts()
   }, [])
 
-  return <DataTable data={data} columns={columns} add={<GameForm />} />
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      add={
+        <div className="space-x-2">
+          <UploadSchedule />
+          <GameForm />
+        </div>
+      }
+    />
+  )
 }
 
 export default Courts

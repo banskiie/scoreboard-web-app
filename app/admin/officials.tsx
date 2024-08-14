@@ -16,7 +16,6 @@ import { Official } from "@/types"
 import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
-import Loading from "../loading"
 import OfficialForm from "./dialogs/official-form"
 
 export const columns: ColumnDef<Official>[] = [

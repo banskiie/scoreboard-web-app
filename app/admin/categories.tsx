@@ -75,8 +75,8 @@ export const columns: ColumnDef<Category>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const actions = row.original
       const [openEdit, setOpenEdit] = useState<boolean>(false)
+      const actions = row.original
 
       return (
         <>

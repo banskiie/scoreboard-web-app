@@ -64,6 +64,7 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
 
   const close = () => {
     if (id) dialogClose()
+    document.title = "Administrator"
     setOpen(false)
   }
 
@@ -134,7 +135,7 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
                   />
                   <Detail
                     title="date"
-                    description={moment.unix(data?.time.slot).format("d MMM y")}
+                    description={moment.unix(data?.time?.slot).format("d MMM")}
                   />
                   <Detail
                     title="time"
@@ -179,7 +180,6 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
                           const b_score = data?.sets[`set_${index + 1}`].b_score
                           const set_winner =
                             data?.sets[`set_${index + 1}`].winner
-
                           if (!a_score) return
                           return (
                             <div
@@ -253,39 +253,45 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
                   />
                   <Detail
                     title="start"
-                    description={moment
-                      .unix(data?.time.start.seconds)
-                      .format("hh:mm a")}
+                    description={
+                      data?.time?.start
+                        ? moment.unix(data?.time?.start).format("hh:mm a")
+                        : "N/A"
+                    }
                   />
                   <Detail
                     title="end"
-                    description={moment
-                      .unix(data?.time.end.seconds)
-                      .format("hh:mm a")}
+                    description={
+                      data?.time?.end
+                        ? moment.unix(data?.time?.end.seconds).format("hh:mm a")
+                        : "N/A"
+                    }
                   />
                   <Detail
                     title="duration"
                     description={
-                      Math.trunc(
-                        moment
-                          .duration(
+                      !!(data?.time.end && data?.time?.start)
+                        ? Math.trunc(
                             moment
-                              .unix(data?.time.end.seconds)
-                              .diff(moment.unix(data?.time.start.seconds))
-                          )
-                          .asMinutes()
-                      ) +
-                      "m " +
-                      Math.trunc(
-                        moment
-                          .duration(
+                              .duration(
+                                moment
+                                  .unix(data?.time.end.seconds)
+                                  .diff(moment.unix(data?.time?.start.seconds))
+                              )
+                              .asMinutes()
+                          ) +
+                          "m " +
+                          Math.trunc(
                             moment
-                              .unix(data?.time.end.seconds)
-                              .diff(moment.unix(data?.time.start.seconds))
-                          )
-                          .seconds()
-                      ) +
-                      "s"
+                              .duration(
+                                moment
+                                  .unix(data?.time.end.seconds)
+                                  .diff(moment.unix(data?.time.start.seconds))
+                              )
+                              .seconds()
+                          ) +
+                          "s"
+                        : "N/A"
                     }
                   />
                 </div>
@@ -335,7 +341,13 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
             </DialogClose>
             <Button
               className="bg-blue-800 hover:bg-blue-700"
-              onClick={() => window.print()}
+              onClick={() => {
+                document.title = `${moment
+                  .unix(data?.time.slot)
+                  .format("mdYYYY hh:mm a")}`
+                window.print()
+                document.title = "Administrator"
+              }}
             >
               Print
             </Button>
@@ -367,17 +379,22 @@ const ScoresheetView = ({
         <div className="p-1">
           <div className="text-sm font-extrabold">{`SET ${set}`}</div>
         </div>
-        <div className="border border-slate-800 p-1 h-8">
-          <div className="text-sm">{fetchName(doubles ? "a1" : "a2")}</div>
+        <div className="border-[1px] border-black">
+          <div className="border border-slate-800 p-1 h-8">
+            <div className="text-sm">{fetchName(doubles ? "a1" : "a2")}</div>
+          </div>
+          <div className="border border-slate-800 p-1 h-8">
+            <div className="text-sm">{fetchName(doubles ? "a2" : "a1")}</div>
+          </div>
         </div>
-        <div className="border border-slate-800 p-1 h-8">
-          <div className="text-sm">{fetchName(doubles ? "a2" : "a1")}</div>
-        </div>
-        <div className="border border-slate-800 p-1 h-8 bg-slate-200">
-          <div className="text-sm">{fetchName("b1")}</div>
-        </div>
-        <div className="border border-slate-800 p-1 h-8 bg-slate-200">
-          <div className="text-sm">{fetchName("b2")}</div>
+
+        <div className="border-[1px] border-black">
+          <div className="border border-slate-800 p-1 h-8 bg-slate-200">
+            <div className="text-sm">{fetchName("b1")}</div>
+          </div>
+          <div className="border border-slate-800 p-1 h-8 bg-slate-200">
+            <div className="text-sm">{fetchName("b2")}</div>
+          </div>
         </div>
       </div>
       <div className="flex">
@@ -388,26 +405,30 @@ const ScoresheetView = ({
                 {index + startingIndex}
               </div>
             </div>
-            <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center">
-              <div className="text-sm font-bold">
-                {item.scorer === (doubles ? "a1" : "a2") &&
-                  item.current_a_score}
+            <div className="border-b-[1px] border-t-[1px] border-black">
+              <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center">
+                <div className="text-sm font-bold">
+                  {item.scorer === (doubles ? "a1" : "a2") &&
+                    item.current_a_score}
+                </div>
+              </div>
+              <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center">
+                <div className="text-sm font-bold">
+                  {item.scorer === (doubles ? "a2" : "a1") &&
+                    item.current_a_score}
+                </div>
               </div>
             </div>
-            <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center">
-              <div className="text-sm font-bold">
-                {item.scorer === (doubles ? "a2" : "a1") &&
-                  item.current_a_score}
+            <div className="border-b-[1px] border-t-[1px] border-black">
+              <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center bg-slate-200">
+                <div className="text-sm font-bold">
+                  {item.scorer === "b1" && item.current_b_score}
+                </div>
               </div>
-            </div>
-            <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center bg-slate-200">
-              <div className="text-sm font-bold">
-                {item.scorer === "b1" && item.current_b_score}
-              </div>
-            </div>
-            <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center bg-slate-200">
-              <div className="text-sm font-bold">
-                {item.scorer === "b2" && item.current_b_score}
+              <div className="border border-slate-700 p-1 w-8 h-8 flex items-center justify-center bg-slate-200">
+                <div className="text-sm font-bold">
+                  {item.scorer === "b2" && item.current_b_score}
+                </div>
               </div>
             </div>
           </div>
