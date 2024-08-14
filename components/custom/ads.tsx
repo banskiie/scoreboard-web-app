@@ -32,9 +32,9 @@ const Ads = () => {
           delay: 5000,
         }),
       ]}
-      className="bg-slate-200 w-full flex items-center justify-center"
+      className="w-full flex items-center justify-center"
     >
-      <CarouselContent className="w-screen h-[684px]">
+      <CarouselContent className="w-screen h-[700px]">
         <CarouselItem className="w-full flex items-center justify-center">
           <Image src={Plat1} priority className="h-4/5 object-contain" alt="" />
         </CarouselItem>
