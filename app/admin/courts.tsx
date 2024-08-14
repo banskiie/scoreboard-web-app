@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Loader2, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -18,6 +18,34 @@ import { FIRESTORE_DB } from "@/utils/firebase"
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
 import CourtForm from "./dialogs/court-form"
+
+const ActionCell = ({ actions }: any) => {
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+
+  return (
+    <>
+      <CourtForm
+        id={actions.id}
+        dialogOpen={openEdit}
+        dialogClose={() => setOpenEdit(false)}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+            Edit
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  )
+}
 
 export const columns: ColumnDef<Court>[] = [
   {
@@ -84,34 +112,7 @@ export const columns: ColumnDef<Court>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const actions = row.original
-      const [openEdit, setOpenEdit] = useState<boolean>(false)
-
-      return (
-        <>
-          <CourtForm
-            id={actions.id}
-            dialogOpen={openEdit}
-            dialogClose={() => setOpenEdit(false)}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                Edit
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      )
-    },
+    cell: ({ row }) => <ActionCell actions={row.original} />,
   },
 ]
 

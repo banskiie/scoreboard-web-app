@@ -18,6 +18,34 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore"
 import { useState, useEffect } from "react"
 import OfficialForm from "./dialogs/official-form"
 
+const ActionCell = ({ actions }: any) => {
+  const [openEdit, setOpenEdit] = useState<boolean>(false)
+
+  return (
+    <>
+      <OfficialForm
+        id={actions.id}
+        dialogOpen={openEdit}
+        dialogClose={() => setOpenEdit(false)}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => setOpenEdit(true)}>
+            Edit
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  )
+}
+
 export const columns: ColumnDef<Official>[] = [
   {
     accessorKey: "first_name",
@@ -63,34 +91,7 @@ export const columns: ColumnDef<Official>[] = [
   {
     id: "actions",
     enableHiding: false,
-    cell: ({ row }) => {
-      const actions = row.original
-      const [openEdit, setOpenEdit] = useState<boolean>(false)
-
-      return (
-        <>
-          <OfficialForm
-            id={actions.id}
-            dialogOpen={openEdit}
-            dialogClose={() => setOpenEdit(false)}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => setOpenEdit(true)}>
-                Edit
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      )
-    },
+    cell: ({ row }) => <ActionCell actions={row.original} />,
   },
 ]
 

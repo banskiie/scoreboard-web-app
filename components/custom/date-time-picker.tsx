@@ -254,10 +254,13 @@ function Calendar({
   yearRange = 50,
   ...props
 }: CalendarProps & { yearRange?: number }) {
-  const MONTHS = React.useMemo(() => genMonths(props.locale || enUS), [])
+  const MONTHS = React.useMemo(
+    () => genMonths(props.locale || enUS),
+    [props.locale]
+  )
   const YEARS = React.useMemo(
     () => genYears(props.locale || enUS, yearRange),
-    []
+    [props.locale, yearRange]
   )
 
   return (

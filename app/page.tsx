@@ -66,13 +66,13 @@ const Page = () => {
     } else {
       console.log("No user signed in.")
     }
-  }, [user])
+  }, [pathname, router, user])
 
   useEffect(() => {
     selectedUser.includes("court")
       ? form.setValue("password", selectedUser.split("@")[0])
       : form.resetField("password")
-  }, [selectedUser])
+  }, [selectedUser, form])
 
   const signIn = async (payload: z.infer<typeof LOGIN_FORM_SCHEMA>) => {
     setLoading(true)
