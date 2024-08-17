@@ -74,7 +74,7 @@ const Header = () => {
   return (
     <div className="h-full w-full flex items-center p-2.5 gap-2.5">
       <HeaderSlice position="start">
-        <span className="text-4xl font-bold uppercase">
+        <span className="text-3xl font-bold uppercase">
           {user?.displayName}
           {!!(!data?.details.game_winner && data) &&
             `  (Set ${data?.details.playing_set} of
@@ -83,7 +83,7 @@ const Header = () => {
       </HeaderSlice>
       <HeaderSlice position="center">
         {!!(!data?.details.game_winner && data) && (
-          <span className="text-4xl text-center font-bold uppercase">
+          <span className="text-3xl text-center font-bold uppercase">
             {`${data?.details.category.split(".")[0]} - ${
               data?.details.category.split(".")[1]
             }`}
