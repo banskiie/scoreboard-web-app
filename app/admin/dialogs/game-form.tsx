@@ -237,15 +237,109 @@ const GameForm = ({ id, dialogOpen, dialogClose }: any) => {
     }
   }, [id])
 
+  const oneSet = {
+    set_1: {
+      a_score: 0,
+      b_score: 0,
+      current_round: 1,
+      last_team_scored: "",
+      winner: "",
+      scoresheet: [
+        {
+          team_scored: "",
+          scored_at: "",
+          a_switch: true,
+          b_switch: true,
+          current_a_score: 0,
+          current_b_score: 0,
+          scorer: "",
+          to_serve: "",
+          next_serve: "",
+        },
+      ],
+      switch: false,
+    },
+  }
+
+  const threeSet = {
+    set_1: {
+      a_score: 0,
+      b_score: 0,
+      current_round: 1,
+      last_team_scored: "",
+      winner: "",
+      scoresheet: [
+        {
+          team_scored: "",
+          scored_at: "",
+          a_switch: true,
+          b_switch: true,
+          current_a_score: 0,
+          current_b_score: 0,
+          scorer: "",
+          to_serve: "",
+          next_serve: "",
+        },
+      ],
+      switch: false,
+    },
+    set_2: {
+      a_score: 0,
+      b_score: 0,
+      current_round: 1,
+      last_team_scored: "",
+      winner: "",
+      scoresheet: [
+        {
+          team_scored: "",
+          scored_at: "",
+          a_switch: true,
+          b_switch: true,
+          current_a_score: 0,
+          current_b_score: 0,
+          scorer: "",
+          to_serve: "",
+          next_serve: "",
+        },
+      ],
+      switch: false,
+    },
+    set_3: {
+      a_score: 0,
+      b_score: 0,
+      current_round: 1,
+      last_team_scored: "",
+      winner: "",
+      scoresheet: [
+        {
+          team_scored: "",
+          scored_at: "",
+          a_switch: true,
+          b_switch: true,
+          current_a_score: 0,
+          current_b_score: 0,
+          scorer: "",
+          to_serve: "",
+          next_serve: "",
+        },
+      ],
+      switch: false,
+    },
+  }
+
   const submit = async (payload: z.infer<typeof GAME_FORM_SCHEMA>) => {
     try {
+      console.log(payload)
       setLoading(true)
       if (id) {
         await updateDoc(doc(FIRESTORE_DB, `games/${id}`), payload)
         toast.info("Game Updated")
       } else {
+        const setCount = payload.details.no_of_sets
+        console.log(setCount)
         await addDoc(collection(FIRESTORE_DB, "games"), {
           ...payload,
+          sets: setCount == 1 ? oneSet : threeSet,
           details: {
             ...payload.details,
             created_date: moment().valueOf(),
