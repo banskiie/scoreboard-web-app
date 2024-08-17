@@ -233,7 +233,7 @@ export const columns: ColumnDef<Game>[] = [
             <span className={"text-center text-xs"}>{b_set_score}</span>
           </div>
           {filteredSets.map((set: any, index: number) => {
-            if (!!set.a_score && !!set.b_score)
+            if (!!set?.a_score && !!set?.b_score)
               return (
                 <div
                   className="text-center w-full flex items-center justify-between gap-0.5"

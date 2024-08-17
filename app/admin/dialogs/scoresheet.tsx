@@ -176,10 +176,10 @@ const Scoresheet = ({ id, dialogOpen, dialogClose }: any) => {
                     <div className="flex flex-col h-full border-[1px] border-black">
                       {Array.from({ length: data?.details.no_of_sets }).map(
                         (_, index: number) => {
-                          const a_score = data?.sets[`set_${index + 1}`].a_score
-                          const b_score = data?.sets[`set_${index + 1}`].b_score
+                          const a_score = data?.sets[`set_${index + 1}`]?.a_score ?? 0
+                          const b_score = data?.sets[`set_${index + 1}`]?.b_score ?? 0
                           const set_winner =
-                            data?.sets[`set_${index + 1}`].winner
+                            data?.sets[`set_${index + 1}`]?.winner
                           if (!a_score) return
                           return (
                             <div
