@@ -72,7 +72,7 @@ const Header = () => {
   }
 
   return (
-    <div className="h-full w-full flex items-center p-2.5 gap-2.5">
+    <div className="h-full w-full flex items-center p-2.5 gap-2.5 bg-slate-100">
       <HeaderSlice position="start">
         <span className="text-3xl font-bold uppercase">
           {user?.displayName}

@@ -16,7 +16,7 @@ const DisplayLayout = ({
 }>) => {
   return (
     <div
-      className={cn("h-screen w-full font-sans antialiased", roboto.className)}
+      className={cn("h-screen w-full font-sans antialiased bg-slate-400", roboto.className)}
     >
       <div className="h-[7%]">
         <Header />
