@@ -21,10 +21,12 @@ import { Badge } from "@/components/ui/badge"
 import moment from "moment"
 import Scoresheet from "./dialogs/scoresheet"
 import UploadSchedule from "./dialogs/upload"
+import DeleteGame from "./dialogs/delete-game"
 
 const ActionCell = ({ actions }: any) => {
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openView, setOpenView] = useState<boolean>(false)
+  const [openDelete, setOpenDelete] = useState<boolean>(false)
 
   return (
     <div className="w-10">
@@ -37,6 +39,11 @@ const ActionCell = ({ actions }: any) => {
         id={actions.id}
         dialogOpen={openView}
         dialogClose={() => setOpenView(false)}
+      />
+      <DeleteGame
+        id={actions.id}
+        dialogOpen={openDelete}
+        dialogClose={() => setOpenDelete(false)}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -52,6 +59,12 @@ const ActionCell = ({ actions }: any) => {
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpenEdit(true)}>
             Edit
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            className="text-red-600"
+            onClick={() => setOpenDelete(true)}
+          >
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
