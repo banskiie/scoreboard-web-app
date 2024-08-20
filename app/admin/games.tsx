@@ -78,21 +78,8 @@ export const columns: ColumnDef<Game>[] = [
     accessorFn: (data: Game) => {
       const { time } = data as any
       const { slot } = time
-      console.log(slot)
-      return !!slot
-        ? (moment.unix(slot).format("MMMM D h:mm A") as string)
-        : "TBA"
-    },
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Slot
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      )
+      // Return the Unix timestamp for sorting
+      return slot ? slot : null
     },
     cell: ({ row }) => {
       const { slot } = row.original.time
@@ -112,6 +99,17 @@ export const columns: ColumnDef<Game>[] = [
             <p>TBA</p>
           )}
         </div>
+      )
+    },
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Slot
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
       )
     },
   },
@@ -370,17 +368,24 @@ const Courts = () => {
     const fetchCourts = async () => {
       try {
         const ref = collection(FIRESTORE_DB, "games")
-        onSnapshot(query(ref, orderBy("statuses.current", "desc")), {
-          next: (snapshot) => {
-            setData(
-              snapshot.docs.map((doc: any) => ({
-                id: doc.id,
-                ...doc.data(),
-                actions: { id: doc.id },
-              }))
-            )
-          },
-        })
+        onSnapshot(
+          query(
+            ref,
+            // orderBy("statuses.current", "desc"),
+            orderBy("time.slot", "asc")
+          ),
+          {
+            next: (snapshot) => {
+              setData(
+                snapshot.docs.map((doc: any) => ({
+                  id: doc.id,
+                  ...doc.data(),
+                  actions: { id: doc.id },
+                }))
+              )
+            },
+          }
+        )
       } catch (error: any) {
         console.error(error)
       }

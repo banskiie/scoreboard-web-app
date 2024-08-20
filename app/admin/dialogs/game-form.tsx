@@ -592,7 +592,19 @@ const GameForm = ({ id, dialogOpen, dialogClose }: any) => {
                       </FormLabel>
                       <FormControl>
                         <Select
-                          onValueChange={(value) => field.onChange(+value)}
+                          onValueChange={(value) => {
+                            field.onChange(+value)
+                            switch (value) {
+                              case "1":
+                                form.setValue("details.max_score", 31)
+                                break
+                              case "3":
+                                form.setValue("details.max_score", 21)
+                                form.setValue("details.plus_two_rule", true)
+                                form.setValue("details.plus_two_score", 30)
+                                break
+                            }
+                          }}
                           value={field.value.toString() as any}
                         >
                           <SelectTrigger className="w-full">
@@ -767,6 +779,56 @@ const GameForm = ({ id, dialogOpen, dialogClose }: any) => {
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={form.control}
+                  name="details.plus_two_rule"
+                  render={({ field }) => (
+                    <FormItem className="flex items-center justify-start gap-2 ml-2 w-full col-span-8">
+                      <FormControl>
+                        <div className="flex items-center gap-2">
+                          <Checkbox
+                            id="plus_two_rule"
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                          <label
+                            htmlFor="plus_two_rule"
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            Plus two rule?
+                          </label>
+                        </div>
+                      </FormControl>
+                      <FormMessage className="text-xs" />
+                    </FormItem>
+                  )}
+                />
+                {!!form.watch("details.plus_two_rule") && (
+                  <FormField
+                    control={form.control}
+                    name="details.plus_two_score"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col col-span-2">
+                        <FormLabel>
+                          Plus Two Score <b className="text-red-500">*</b>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={loading}
+                            placeholder="Plus Two Score"
+                            type="number"
+                            {...field}
+                            onChange={(e) =>
+                              field.onChange(e.target.valueAsNumber)
+                            }
+                            min={1}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                )}
                 <div className="col-span-8 flex justify-center">
                   <Badge className="text-center font-bold text-1xl">
                     Players
